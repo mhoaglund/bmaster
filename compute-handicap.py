@@ -1,6 +1,7 @@
 import os
 import csv
 import json
+import collections, operator
 
 confidence = 1
 threshold = 0.08
@@ -104,5 +105,13 @@ with open('bmastercurrent.csv', 'rb') as csvfile:
                     }
                 })
 
-    with open('all_current.txt', 'w') as outfile:  
-        json.dump(adjusted_all, outfile)
+    def returnAdjusted(obj):
+        return obj['Adjusted Score']
+
+    with open('all_current.txt', 'w') as outfile: 
+        temp = []
+        my_list = list(adjusted_all)
+        all_sorted = sorted(my_list, key=lambda x: (adjusted_all[x]['Adjusted Score']), reverse=True)
+        for x in range(0, len(all_sorted)):
+            temp.append({all_sorted[x] : adjusted_all[all_sorted[x]]}) #jesus, really?
+        json.dump(temp, outfile)
